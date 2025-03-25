@@ -1,5 +1,6 @@
-import axios from "axios";
+// import axios from "axios";
 import { createContext, useEffect, useState } from "react";
+import service from "../services/config.services";
 
 // componente contexto => el que comparte los estados por al app
 const AuthContext = createContext()
@@ -9,6 +10,7 @@ function AuthWrapper(props) {
 
   const [ isLoggedIn, setIsLoggedIn ] = useState(false)
   const [ loggedUserId, setLoggedUserId ] = useState(null)
+  const [ userRole, setUserRole ] = useState(null)
   const [ isAuthenticatingUser, setIsAuthenticatingUser ] = useState(true)
 
   useEffect(() => {
@@ -21,18 +23,15 @@ function AuthWrapper(props) {
 
     try {
 
-      const authToken = localStorage.getItem("authToken")
+      // const authToken = localStorage.getItem("authToken")
 
-      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/auth/verify`, {
-        headers: {
-          authorization: `Bearer ${authToken}`
-        }
-      })
+      const response = await service.get(`/auth/verify`) // va con el token, configurado en el service
 
       console.log(response) // payload
       // si la llamada llega a este punto significa que el usuario fue correctamente validado
       setIsLoggedIn(true)
       setLoggedUserId(response.data.payload._id)
+      setUserRole(response.data.payload.role) //* EXTRA. Roles
       setIsAuthenticatingUser(false)
       
     } catch (error) {
@@ -40,6 +39,7 @@ function AuthWrapper(props) {
       console.log(error)
       setIsLoggedIn(false)
       setLoggedUserId(null)
+      setUserRole(null) //* EXTRA. Roles
       setIsAuthenticatingUser(false)
     }
 

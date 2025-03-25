@@ -1,4 +1,5 @@
-import axios from "axios";
+// import axios from "axios";
+import service from "../../services/config.services";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +22,8 @@ function Signup() {
     // ... contactar al backend para registrar al usuario aqui
     try {
       
-      await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/auth/signup`, {
+      // await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/auth/signup`, {
+      await service.post(`/auth/signup`, {
         username: username,
         email:email,
         password: password
